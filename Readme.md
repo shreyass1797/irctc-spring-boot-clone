@@ -1,78 +1,118 @@
-IRCTC Ticket Booking System Clone 🚄
+# 🚄 IRCTC Ticket Booking System — Spring Boot Clone
 
-A robust, enterprise-grade backend for a railway reservation system built with Java and Spring Boot. This project simulates core IRCTC functionalities, focusing on data consistency, secure authentication, and scalable architecture.
-🚀 Key Features
+A robust, enterprise-grade backend for a railway reservation system built with **Java** and **Spring Boot**. This project simulates core IRCTC functionalities, focusing on data consistency, secure authentication, and scalable architecture.
 
-    Atomic Booking Engine: Implements strict concurrency control to prevent double-booking of seats during simultaneous requests.
+---
 
-    Polymorphic Fare Calculation: Utilizes OOP principles to calculate dynamic fares for different seat classes (AC, Sleeper) through a single entry point.
+## ✨ Features
 
-    Secure Authentication: User credentials are protected using Spring Security and BCrypt password hashing.
+- **Atomic Booking Engine** — Pessimistic locking prevents double-booking under concurrent requests
+- **Polymorphic Fare Calculation** — OOP-driven dynamic fares for AC and Sleeper classes via a unified entry point
+- **Secure Authentication** — BCrypt password hashing via Spring Security
+- **Relational Persistence** — Fully normalized PostgreSQL schema with referential integrity across Users, Trains, and Tickets
+- **Automated PNR Generation** — Unique 10-digit Passenger Name Record assigned to every successful booking
+- **Layered Architecture** — Clean Controller → Service → Repository separation of concerns
 
-    Relational Persistence: A fully normalized PostgreSQL schema managing Users, Trains, and Tickets with referential integrity.
+---
 
-    Automated PNR Generation: Unique 10-digit Passenger Name Record (PNR) generation for every successful transaction.
+## 🛠️ Tech Stack
 
-    Layered Architecture: Follows the Controller-Service-Repository pattern for clean separation of concerns and maintainability.
+| Layer | Technology |
+|---|---|
+| Language | Java 17+ |
+| Framework | Spring Boot 3.x |
+| Database | PostgreSQL |
+| ORM | Spring Data JPA / Hibernate |
+| Security | Spring Security (BCrypt) |
+| Build Tool | Maven |
 
-🛠️ Tech Stack
+---
 
-    Language: Java 17+
+## 🏗️ Technical Highlights
 
-    Framework: Spring Boot 3.x
+### 1. Concurrency & Race Condition Prevention
 
-    Database: PostgreSQL
+The classic "double-booking" problem is solved using **Pessimistic Locking**. By combining `@Lock(LockModeType.PESSIMISTIC_WRITE)` with `@Transactional` boundaries, the system locks a train's seat record at the database level during any booking operation — guaranteeing 100% consistency even under high traffic.
 
-    ORM: Spring Data JPA / Hibernate
+### 2. OOP & Single Table Inheritance
 
-    Security: Spring Security (BCrypt)
+Ticket types are modeled using **Single Table Inheritance**. An abstract `Ticket` base class defines the blueprint, while `ACTicket` and `SleeperTicket` subclasses override `calculateFare()`. This design makes adding new classes (e.g., First Class, General) completely non-breaking to existing logic.
 
-    Build Tool: Maven
+---
 
-🏗️ Technical Highlights
-1. Concurrency & Race Condition Resolution
+## 🛣️ API Endpoints
 
-To solve the "double-booking" problem common in high-traffic reservation systems, I implemented Pessimistic Locking. By using @Lock(LockModeType.PESSIMISTIC_WRITE) and @Transactional boundaries, the system ensures that a train's seat count is locked at the database level during the booking process, guaranteeing 100% data consistency.
-2. OOP & Design Patterns
+### User Management
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/users` | Register a new user (password hashed via BCrypt) |
 
-The system leverages Single Table Inheritance to model different ticket types. An abstract Ticket base class defines the blueprint, while subclasses like ACTicket and SleeperTicket override the calculateFare() method. This makes the system highly extensible for adding new seat classes (e.g., First Class, General) without modifying existing business logic.
-Getty Images
-Explore
-🛣️ API Endpoints
-User Management
+### Train Services
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/trains` | Add a new train *(Admin)* |
+| `GET` | `/trains/search` | Search trains by source and destination |
 
-    POST /users - Register a new user (Passwords hashed via BCrypt).
+### Booking Services
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/tickets/book` | Atomic ticket booking with PNR generation |
+| `GET` | `/tickets/history/{userId}` | Retrieve a user's full booking history |
 
-Train Services
+---
 
-    POST /trains - Add a new train (Admin).
+## ⚙️ Setup & Installation
 
-    GET /trains/search - Search trains by source and destination.
+### Prerequisites
+- Java 17+
+- Maven
+- PostgreSQL
 
-Booking Services
+### 1. Clone the Repository
 
-    POST /tickets/book - Atomic ticket booking with PNR generation.
+```bash
+git clone https://github.com/yourusername/irctc-spring-boot-clone.git
+cd irctc-spring-boot-clone
+```
 
-    GET /tickets/history/{userId} - Retrieve a user's booking ledger.
+### 2. Configure the Database
 
-⚙️ Setup Instructions
+Create a PostgreSQL database named `irctcdb`, then update `src/main/resources/application.properties`:
 
-    Clone the repo:
-    Bash
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/irctcdb
+spring.datasource.username=postgres
+spring.datasource.password=yourpassword
+```
 
-    git clone https://github.com/yourusername/irctc-spring-boot-clone.git
+### 3. Run the Application
 
-    Configure PostgreSQL:
-    Update src/main/resources/application.properties with your database credentials:
-    Properties
+```bash
+./mvnw spring-boot:run
+```
 
-    spring.datasource.url=jdbc:postgresql://localhost:5432/irctcdb
-    spring.datasource.username=postgres
-    spring.datasource.password=yourpassword
+The server will start at `http://localhost:8080`.
 
-    Run the application:
-    Bash
+---
 
-    ./mvnw spring-boot:run
+## 📂 Project Structure
 
-    Note: This project was developed as a deep-dive into backend engineering principles, specifically focusing on handling concurrent transactions and relational data modeling in a Java environment.
+```
+src/
+├── main/
+│   ├── java/com/yourpackage/
+│   │   ├── controller/       # REST controllers
+│   │   ├── service/          # Business logic
+│   │   ├── repository/       # JPA repositories
+│   │   ├── model/            # Entity classes (User, Train, Ticket)
+│   │   └── security/         # Spring Security config
+│   └── resources/
+│       └── application.properties
+└── test/
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
