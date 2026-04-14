@@ -17,14 +17,14 @@ public class TrainService {
 
     // Logic to get all trains
     public List<Train> getAllTrains() {
-        return trainRepository.findAll(); // This magically runs SELECT * FROM trains
+        return trainRepository.findAll(); // This runs SELECT * FROM trains
     }
 
     // Logic to add a new train to the database (For Admins)
     public Train addTrain(Train train) {
-        // When a new train is added, available seats should equal total seats!
+        // When a new train is added, available seats should equal total seats
         train.setAvailableSeats(train.getTotalSeats());
-        return trainRepository.save(train); // Magically runs INSERT INTO trains...
+        return trainRepository.save(train); // runs INSERT INTO trains...
     }
 
     public List<Train> searchTrains(String source, String destination) {

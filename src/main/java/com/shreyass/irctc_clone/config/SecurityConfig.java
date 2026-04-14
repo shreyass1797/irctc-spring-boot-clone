@@ -24,7 +24,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Allow anyone to register, view trains, and search trains without logging in
                 .requestMatchers("/users", "/trains", "/trains/search").permitAll()
-                // Require authentication for anything else (we'll expand this later!)
+                // Require authentication for anything else
                 .anyRequest().permitAll() 
             );
             
