@@ -20,7 +20,7 @@ A robust, enterprise-grade backend for a railway reservation system built with *
 | Layer | Technology |
 |---|---|
 | Language | Java 17+ |
-| Framework | Spring Boot 3.x |
+| Framework | Spring Boot 4.0.5 |
 | Database | PostgreSQL |
 | ORM | Spring Data JPA / Hibernate |
 | Security | Spring Security (BCrypt) |
