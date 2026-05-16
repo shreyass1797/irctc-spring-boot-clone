@@ -3,6 +3,7 @@ package com.shreyass.irctc_clone.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.shreyass.irctc_clone.model.Train;
@@ -27,6 +28,7 @@ public class TrainService {
         return trainRepository.save(train); // runs INSERT INTO trains...
     }
 
+    @Cacheable(value="trainSearch", key="#source + '-' + #destination")
     public List<Train> searchTrains(String source, String destination) {
         return trainRepository.findBySourceStationAndDestinationStation(source, destination);
     }

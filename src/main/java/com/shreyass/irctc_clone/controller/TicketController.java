@@ -1,4 +1,4 @@
-package com.shreyass.irctc_clone;
+package com.shreyass.irctc_clone.controller;
 
 import java.util.List;
 

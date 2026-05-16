@@ -1,4 +1,4 @@
-package com.shreyass.irctc_clone;
+package com.shreyass.irctc_clone.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

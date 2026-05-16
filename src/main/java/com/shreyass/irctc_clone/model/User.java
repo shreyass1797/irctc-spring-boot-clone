@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size; 
 
@@ -14,6 +15,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Version
+    private Long version;
 
     @NotBlank(message = "Username cannot be blank")
     private String username;
@@ -55,6 +59,10 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Long getVersion() {
+        return version;
     }
     
 }

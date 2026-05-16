@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "trains")
@@ -12,6 +13,10 @@ public class Train {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Version
+    private Long version;
+
     private String trainNumber;
     private String sourceStation;
     private String destinationStation;
@@ -75,6 +80,10 @@ public class Train {
 
     public void setBaseFare(Double baseFare) {
         this.baseFare = baseFare;
+    }
+
+    public Long getVersion() {
+        return version;
     }
     
 }
