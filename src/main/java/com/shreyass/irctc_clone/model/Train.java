@@ -1,5 +1,7 @@
 package com.shreyass.irctc_clone.model;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,7 +11,7 @@ import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "trains")
-public class Train {
+public class Train implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
