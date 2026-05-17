@@ -1,0 +1,15 @@
+# 1. Use an official Java runtime as a parent image
+FROM eclipse-temurin:25-jdk-alpine
+
+# 2. Set the working directory inside the container
+WORKDIR /app
+
+# 3. Copy the compiled jar file into the container
+# (We will compile this locally first before running docker)
+COPY target/irctc-clone-0.0.1-SNAPSHOT.jar app.jar
+
+# 4. Expose port 8080 to the outside world
+EXPOSE 8080
+
+# 5. Command to run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
