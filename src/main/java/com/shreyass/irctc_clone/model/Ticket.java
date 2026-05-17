@@ -1,5 +1,7 @@
 package com.shreyass.irctc_clone.model;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -12,14 +14,17 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "tickets")
-// 1. Tell Hibernate: "Store all subclasses in this one 'tickets' table"
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-// 2. Create a special column to tell us if a row is an AC or Sleeper ticket
 @DiscriminatorColumn(name = "seat_class", discriminatorType = DiscriminatorType.STRING)
+@Getter
+@Setter
+@NoArgsConstructor
 public abstract class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,85 +42,15 @@ public abstract class Ticket {
     private String pnr;
 
     private int seatNumber;
-    private Double totalFare;
-    private String berthPreference; // e.g., "WINDOW", "LOWER"
-    private String allocatedBerthType;
-    private String status; // "CONFIRMED", "WAITLISTED"
-
-    public Ticket() {}
-
-    public abstract void calculateFare(Double trainBaseFare);
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public int getSeatNumber() {
-        return seatNumber;
-    }
-
-    public void setSeatNumber(int seatNumber) {
-        this.seatNumber = seatNumber;
-    }
-
-    public String getBerthPreference() {
-        return berthPreference;
-    }
-
-    public void setBerthPreference(String berthPreference) {
-        this.berthPreference = berthPreference;
-    }
-
-    public String getAllocatedBerthType() {
-        return allocatedBerthType;
-    }
-
-    public void setAllocatedBerthType(String allocatedBerthType) {
-        this.allocatedBerthType = allocatedBerthType;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Double getTotalFare() {
-        return totalFare;
-    }
-
-    public void setTotalFare(Double totalFare) {
-        this.totalFare = totalFare;
-    }
-
-    public Train getTrain() {
-        return train;
-    }
-
-    public void setTrain(Train train) {
-        this.train = train;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getPnr() {
-        return pnr;
-    }
-
-    public void setPnr(String pnr) {
-        this.pnr = pnr;
-    }
+  
+    private BigDecimal totalFare; 
     
+    private String berthPreference; 
+    private String allocatedBerthType;
+    private String status; 
+
+    @Column(name = "seat_class", insertable = false, updatable = false)
+    private String seatClass;
+
+    public abstract void calculateFare(BigDecimal trainBaseFare);
 }

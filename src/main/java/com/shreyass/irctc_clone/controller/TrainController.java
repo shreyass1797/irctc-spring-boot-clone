@@ -14,7 +14,7 @@ import com.shreyass.irctc_clone.model.Train;
 import com.shreyass.irctc_clone.service.TrainService;
 
 @RestController
-@RequestMapping("/trains") // This means ALL endpoints in this file start with /trains
+@RequestMapping("/api/trains") // This means ALL endpoints in this file start with /trains
 public class TrainController {
 
     @Autowired

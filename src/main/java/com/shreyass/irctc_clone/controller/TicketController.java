@@ -1,35 +1,79 @@
 package com.shreyass.irctc_clone.controller;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody; // Changed!
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shreyass.irctc_clone.dto.BookingRequest;
+import com.shreyass.irctc_clone.dto.TicketResponse;
 import com.shreyass.irctc_clone.model.Ticket;
+import com.shreyass.irctc_clone.model.User;
+import com.shreyass.irctc_clone.repository.UserRepository;
 import com.shreyass.irctc_clone.service.TicketService;
 
 @RestController
-@RequestMapping("/tickets")
+@RequestMapping("/api/tickets")
 public class TicketController {
 
     @Autowired
     private TicketService ticketService;
 
-    // We use @RequestParam here to pass data in the URL (e.g., ?userId=1&trainId=1)
+    @Autowired
+    private UserRepository userRepository;
+
+    // --- 1. SECURE BOOKING WITH DTO ---
     @PostMapping("/book")
-    public Ticket bookTrainTicket(@RequestParam Long userId, @RequestParam Long trainId, @RequestParam String seatClass) {
-        return ticketService.bookTicket(userId, trainId, seatClass);
+    public ResponseEntity<TicketResponse> bookTrainTicket(
+            Principal principal, 
+            @RequestBody BookingRequest request) { // Client now sends JSON!
+        
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Book the ticket
+        Ticket rawTicket = ticketService.bookTicket(user.getId(), request.getTrainId(), request.getSeatClass());
+
+        // Convert and return
+        return ResponseEntity.ok(convertToDto(rawTicket));
     }
 
-    // GET request to fetch all tickets for a specific user
-    // Example URL: /tickets/history/1
-    @GetMapping("/history/{userId}")
-    public List<Ticket> getUserBookingHistory(@PathVariable Long userId) {
-        return ticketService.getBookingHistory(userId);
+    // --- 2. SECURE HISTORY WITH DTO ---
+    @GetMapping("/history")
+    public ResponseEntity<List<TicketResponse>> getUserBookingHistory(Principal principal) {
+        
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Ticket> rawTickets = ticketService.getBookingHistory(user.getId());
+
+        // Convert the whole list to DTOs using Java Streams
+        List<TicketResponse> safeResponse = rawTickets.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(safeResponse);
+    }
+
+    // --- Helper Method to Map Entity to DTO ---
+    private TicketResponse convertToDto(Ticket ticket) {
+        return new TicketResponse(
+                ticket.getId(),
+                ticket.getPnr(),
+                ticket.getTrain().getTrainNumber(),
+                ticket.getTrain().getSourceStation(),
+                ticket.getTrain().getDestinationStation(),
+                ticket.getSeatClass(), 
+                ticket.getSeatNumber(),
+                ticket.getStatus(),
+                ticket.getTotalFare()
+        );
     }
 }
