@@ -1,6 +1,7 @@
 package com.shreyass.irctc_clone.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +31,6 @@ public class Train implements Serializable {
     private String destinationStation;
     private int totalSeats;
     private int availableSeats;
-    private Double baseFare;
+    private BigDecimal baseFare;
     
 }
