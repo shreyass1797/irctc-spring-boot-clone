@@ -20,12 +20,6 @@ public class TrainController {
     @Autowired
     private TrainService trainService;
 
-    // GET /trains -> Returns a list of all trains in the database
-    @GetMapping
-    public List<Train> viewAllTrains() {
-        return trainService.getAllTrains();
-    }
-
     // POST /trains -> Allows us to send JSON data to create a new train
     @PostMapping
     public Train createNewTrain(@RequestBody Train train) {

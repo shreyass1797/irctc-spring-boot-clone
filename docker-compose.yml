@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # 1. The PostgreSQL Database
   db:
@@ -8,7 +6,7 @@ services:
     environment:
       POSTGRES_DB: irctcdb
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root  # Change if you used a different password
+      POSTGRES_PASSWORD: kb9gb11cr7  
     ports:
       - "5432:5432"
     volumes:
@@ -42,7 +40,7 @@ services:
       # Notice we use the container names ('db' and 'cache') instead of 'localhost'
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/irctcdb
       - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_PASSWORD=kb9gb11cr7
       - SPRING_DATA_REDIS_HOST=cache
       - SPRING_DATA_REDIS_PORT=6379
 
