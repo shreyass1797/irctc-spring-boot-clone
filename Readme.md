@@ -27,6 +27,7 @@ A Cache-Aside pattern sits in front of all train search queries. Frequently acce
 | ORM | Spring Data JPA / Hibernate |
 | Security | Spring Security, JJWT |
 | Documentation | Springdoc OpenAPI (Swagger UI) |
+| Deployment | Docker, Docker Compose |
 | Build Tool | Maven |
 
 ---
@@ -76,6 +77,28 @@ Full interactive documentation available at `http://localhost:8080/swagger-ui/in
 
 ## Local Setup
 
+### Option A — Docker (Recommended)
+
+Ensure Docker Desktop is running, then:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/yourusername/irctc-clone.git
+cd irctc-clone
+
+# 2. Compile the application
+./mvnw clean package -DskipTests
+
+# 3. Launch the full stack (App + PostgreSQL + Redis)
+docker compose up -d --build
+```
+
+Navigate to `http://localhost:8080/swagger-ui/index.html` to explore and test all API endpoints.
+
+---
+
+### Option B — Manual Setup
+
 ### Prerequisites
 - Java 25
 - Maven
@@ -118,7 +141,6 @@ src/
 │   │   ├── repository/       # JPA repositories
 │   │   ├── model/            # Entity classes (User, Train, Ticket)
 │   │   ├── security/         # JWT filter, Spring Security config
-│   │   └── cache/            # Redis cache configuration
 │   └── resources/
 │       └── application.properties
 └── test/
